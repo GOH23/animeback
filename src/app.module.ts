@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Link } from './links/entities/link.entity';
 import { Anime } from './animes/entities/anime.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot(
@@ -19,8 +20,11 @@ import { Anime } from './animes/entities/anime.entity';
       password: 'QB7WpZOkl8aBb6u2VPaFDXdV37Oa2w',
       database: 'bnucq7n3yzrgufhp6ftt',
       entities: [User,Link,Anime],
+      schema: 'dd',
+      autoLoadEntities: true,
+      synchronize: true
     }
-  ),LinksModule, AnimesModule, UsersModule],
+  ),LinksModule, AnimesModule,UsersModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -12,8 +12,9 @@ export class User {
     Uuid: string;
     @Column({default: false})
     IsPremium: boolean;
-     
-    @Column()
+    @Column({type: 'simple-json',nullable: true})
+    UserMedia: {ProfileImage: string,BannerImage: string}
+    @Column({unique: true})
     Email: string;
     @Column()
     Password: string;
@@ -21,7 +22,9 @@ export class User {
     Username: string;
     @Column({type: 'enum',enum: UserRoles,default: UserRoles.User})
     Role: UserRoles
-    @OneToOne(()=> Link)
+    @OneToOne(()=> Link,(lnk)=>lnk.UserOfLink,{
+        cascade: true
+    })
     @JoinColumn()
-    Links: Link[]
+    Links: Link
 }
