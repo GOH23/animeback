@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+import { StarRating } from "src/starrating/entities/starrating.entity";
+import { Tags } from "src/tags/entities/tags.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Anime {
@@ -8,7 +11,17 @@ export class Anime {
     Name: string;
     @Column()
     Description: string;
-    @Column()
+    @Column({default: ''})
     ImageAnime: string;
-    
+    @Column("text",{array: true,nullable: true})
+    PreviewImages: string[];
+    @Column({default: 0})
+    ViewCount: number
+    @OneToMany(()=>StarRating,(el)=>el.RatedAnime,{cascade: true})
+    @JoinColumn()
+    StarRating: StarRating[]
+    @ManyToMany(()=>Tags,(el)=>el.Animes)
+    Tags: Tags[]
+    @CreateDateColumn()
+    CreatedAt: Date
 }

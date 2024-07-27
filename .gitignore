@@ -54,3 +54,5 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+uploadedFiles/avatars/15a5c5c7-9b67-482f-9f96-f094fbcae4cb/dbd39cf451eed94a7929b049b7455377.png
+uploadedFiles/banners/15a5c5c7-9b67-482f-9f96-f094fbcae4cb/fa1013b77eb27d3a5a0610c6bd2913ebe9.png

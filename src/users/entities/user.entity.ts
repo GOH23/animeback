@@ -1,6 +1,7 @@
 import { Link } from "src/links/entities/link.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-enum UserRoles {
+import { StarRating } from "src/starrating/entities/starrating.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+export enum UserRoles {
     Admin = "Admin",
     User = "User",
     Moderator = "Moderator",
@@ -14,16 +15,21 @@ export class User {
     IsPremium: boolean;
     @Column({type: 'simple-json',nullable: true})
     UserMedia: {ProfileImage: string,BannerImage: string}
-    @Column({unique: true})
+    @Column({select: false,unique: true})
     Email: string;
-    @Column()
+    @Column({select: false})
     Password: string;
     @Column()
     Username: string;
+    @Column({default: false})
+    IsBanned: boolean 
     @Column({type: 'enum',enum: UserRoles,default: UserRoles.User})
     Role: UserRoles
+    @OneToMany(()=>StarRating,el =>el.RatedUser,{eager: true})
+    StarRating: StarRating[]
     @OneToOne(()=> Link,(lnk)=>lnk.UserOfLink,{
-        cascade: true
+        cascade: true,
+        eager: true
     })
     @JoinColumn()
     Links: Link

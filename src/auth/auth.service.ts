@@ -16,4 +16,8 @@ export class AuthService {
         const payload = {userID: findedUser.Uuid}
         return {access_token: await this.jwtService.signAsync(payload)}
     }
+    async getAuthProfile(userID: string){
+        const profile= await this.usersService.getProfile(userID)
+        return profile;
+    }
 }
