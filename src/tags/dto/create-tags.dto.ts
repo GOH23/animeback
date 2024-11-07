@@ -2,5 +2,9 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateTagsDto{
     @IsNotEmpty()
-    NameTags: string[]
+    TagName: string[]
+}
+export class CreateOneTagDto{
+    @IsNotEmpty()
+    TagName: string
 }

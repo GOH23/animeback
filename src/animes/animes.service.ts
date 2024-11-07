@@ -1,33 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { AnimeDto } from './dto/create-anime.dto';
-import { UpdateAnimeDto } from './dto/update-anime.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Anime } from './entities/anime.entity';
 import { Repository } from 'typeorm';
+import { UpdateAnimesAddtTagDto } from './dto/update-anime-add-tag.dto';
+import { TagsService } from 'src/tags/tags.service';
 
 @Injectable()
 export class AnimesService {
-  constructor(@InjectRepository(Anime) private AnimeRepository : Repository<Anime>){}
+  constructor(@InjectRepository(Anime) private AnimeRepository: Repository<Anime>,private TagsService: TagsService) { }
   create(createAnimeDto: AnimeDto) {
-
     return this.AnimeRepository.save(createAnimeDto);
   }
-
   findAll() {
-    return `This action returns all animes`;
-  }
+    return this.AnimeRepository
+      .createQueryBuilder('anime')
+      .leftJoinAndSelect('anime.StarRating', 'StarRating')
 
-  async findOne(id: string) {
-    var GetedAnime = await this.AnimeRepository.findOne({where: {id: id}});
-    GetedAnime.ViewCount++
+      .select([
+        'anime.Id',
+        'anime.Name',
+        'anime.Description',
+        'anime.ImageAnime',
+        'anime.PreviewImages',
+        'anime.ViewCount',
+        'anime.CreatedAt',
+
+      ])
+      .groupBy('anime.Id')
+      .addSelect('COALESCE(AVG(StarRating.Rating), 0)', 'AverageRating')
+      .getRawMany();
+  }
+  async AddTag({AnimeID,TagName}: UpdateAnimesAddtTagDto){
+    var GetedAnime = await this.AnimeRepository.findOne({where: { id: AnimeID },relations: {Tags: true}});
+    GetedAnime.Tags = [...GetedAnime.Tags,await this.TagsService.getTagFromName(TagName)]
     return this.AnimeRepository.save(GetedAnime);
   }
-
-  update(id: number, updateAnimeDto: UpdateAnimeDto) {
-    return `This action updates a #${id} anime`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} anime`;
+  async findOne(id: string) {
+    var GetedAnime = await this.AnimeRepository.findOne({where: { id: id },relations: {Tags: true} });
+    GetedAnime.ViewCount++
+    return this.AnimeRepository.save(GetedAnime);
   }
 }

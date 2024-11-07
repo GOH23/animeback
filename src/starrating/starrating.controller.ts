@@ -1,34 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { StarratingService } from './starrating.service';
 import { CreateStarratingDto } from './dto/create-starrating.dto';
-import { UpdateStarratingDto } from './dto/update-starrating.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('starrating')
 export class StarratingController {
   constructor(private readonly starratingService: StarratingService) {}
-
   @Post()
-  create(@Body() createStarratingDto: CreateStarratingDto) {
-    return this.starratingService.create(createStarratingDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.starratingService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.starratingService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStarratingDto: UpdateStarratingDto) {
-    return this.starratingService.update(+id, updateStarratingDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.starratingService.remove(+id);
+  @UseGuards(AuthGuard)
+  async create(@Body() ReqBody: CreateStarratingDto,@Req() req: any){
+    return await this.starratingService.add_rating(ReqBody,req.userID.userID)
   }
 }

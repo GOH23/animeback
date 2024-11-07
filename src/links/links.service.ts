@@ -13,19 +13,4 @@ export class LinksService {
     await this.linkRepository.save(lnkComponent)
   }
 
-  findAll() {
-    return `This action returns all links`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} link`;
-  }
-
-  update(id: number, updateLinkDto: UpdateLinkDto) {
-    return `This action updates a #${id} link`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} link`;
-  }
 }

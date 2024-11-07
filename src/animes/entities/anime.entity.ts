@@ -1,7 +1,7 @@
 
 import { StarRating } from "src/starrating/entities/starrating.entity";
 import { Tags } from "src/tags/entities/tags.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Anime {
@@ -11,17 +11,32 @@ export class Anime {
     Name: string;
     @Column()
     Description: string;
-    @Column({default: ''})
+    @Column({ default: '' })
     ImageAnime: string;
-    @Column("text",{array: true,nullable: true})
+    @Column("text", { array: true, nullable: true })
     PreviewImages: string[];
-    @Column({default: 0})
+    @Column({ default: 0 })
     ViewCount: number
-    @OneToMany(()=>StarRating,(el)=>el.RatedAnime,{cascade: true})
+    @OneToMany(() => StarRating, (el) => el.RatedAnime, { cascade: true})
     @JoinColumn()
     StarRating: StarRating[]
-    @ManyToMany(()=>Tags,(el)=>el.Animes)
+    @ManyToMany(() => Tags)
+    @JoinTable()
     Tags: Tags[]
+    /*
+        return this.animeRepository
+      .createQueryBuilder('anime')
+      .leftJoinAndSelect('anime.starRatings', 'starRating')
+      .select([
+        'anime.id',
+        'anime.title',
+        // Add other anime fields you want to select
+      ])
+      .addSelect('COALESCE(AVG(starRating.rating), 0)', 'averageRating')
+      .groupBy('anime.id')
+      .orderBy('averageRating', 'DESC')
+      .getRawMany();
+    */
     @CreateDateColumn()
     CreatedAt: Date
 }

@@ -31,6 +31,8 @@ export class User {
         cascade: true,
         eager: true
     })
+    @Column({default: false})
+    IsEmailConfirmed: boolean
     @JoinColumn()
     Links: Link
 }

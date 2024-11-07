@@ -4,9 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import {compare} from 'bcrypt'
 @Injectable()
 export class AuthService {
-    constructor(@Inject(forwardRef(()=>UsersService)) private usersService: UsersService,private jwtService: JwtService){
-
-    }
+    constructor(@Inject(forwardRef(()=>UsersService)) private usersService: UsersService,private jwtService: JwtService){ }
     async getAccessToken({Email,Password}: {Email: string,Password: string}) : Promise<{access_token: string}>{
         const findedUser = await this.usersService.findOne(Email);
         const MatchedPaswword = await compare(Password,findedUser.Password);
