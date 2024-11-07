@@ -9,26 +9,6 @@ export class LinksController {
 
   @Post()
   create(@Body() createLinkDto: CreateLinkDto) {
-    return this.linksService.create(createLinkDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.linksService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.linksService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLinkDto: UpdateLinkDto) {
-    return this.linksService.update(+id, updateLinkDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.linksService.remove(+id);
+    //return this.linksService.create(createLinkDto);
   }
 }

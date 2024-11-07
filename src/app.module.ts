@@ -8,20 +8,37 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Link } from './links/entities/link.entity';
 import { Anime } from './animes/entities/anime.entity';
-
+import { AuthModule } from './auth/auth.module';
+import { FileController } from './file/file.controller';
+import { StarratingModule } from './starrating/starrating.module';
+import { StarRating } from './starrating/entities/starrating.entity';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { TagsModule } from './tags/tags.module';
+import { Tags } from './tags/entities/tags.entity';
+import { ConfigModule } from '@nestjs/config';
+import { EmailconfirmationModule } from './emailconfirmation/emailconfirmation.module';
+import { EmailModule } from './email/email.module';
 @Module({
-  imports: [TypeOrmModule.forRoot(
-    {
-      type: 'postgres',
-      host: 'bnucq7n3yzrgufhp6ftt-postgresql.services.clever-cloud.com',
-      port: 50013,
-      username: 'u6lufckat4fdssajrlht',
-      password: 'QB7WpZOkl8aBb6u2VPaFDXdV37Oa2w',
-      database: 'bnucq7n3yzrgufhp6ftt',
-      entities: [User,Link,Anime],
-    }
-  ),LinksModule, AnimesModule, UsersModule],
-  controllers: [AppController],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true
+    }),
+    TypeOrmModule.forRoot(
+      {
+        type: 'postgres',
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
+        entities: [User,StarRating, Link, Anime,Tags],
+        schema:  process.env.DB_SCHEMA,
+        autoLoadEntities: true,
+        synchronize: true
+      }
+    ), LinksModule, AnimesModule, UsersModule, AuthModule, StarratingModule, BookmarksModule, TagsModule, EmailconfirmationModule, EmailModule],
+  controllers: [AppController, FileController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
